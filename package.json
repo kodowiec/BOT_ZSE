@@ -1,0 +1,24 @@
+{
+  "name": "bot_zse",
+  "version": "1.0.0",
+  "description": "Bot do działania potrzebuje jedynie zainstalowanego Node.JS oraz NPM, wszystko chodzi lokalnie na waszym kompie",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/A4kon/BOT_ZSE.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/A4kon/BOT_ZSE/issues"
+  },
+  "homepage": "https://github.com/A4kon/BOT_ZSE#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "uonet-js": "^0.1.2",
+    "uuid": "^7.0.2"
+  }
+}
