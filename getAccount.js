@@ -26,37 +26,6 @@ const DATA = {
   UzytkownikNazwa: process.env.UzytkownikNazwa,
   TypKonta: null
 }
-const LoginId = process.env.LoginId;
-const IdUczen = process.env.IdUczen;
-const IdOkresKlasyfikacyjny = process.env.IdOkresKlasyfikacyjny;
-let DataPoczatkowa = 1577836800;
-let DataKoncowa = '';
-let WiadomoscId = '';
-const asyncIntervals = [];
-
-const runAsyncInterval = async (cb, interval, intervalIndex) => {
-  await cb();
-  if (asyncIntervals[intervalIndex]) {
-    setTimeout(() => runAsyncInterval(cb, interval, intervalIndex), interval);
-  }
-};
-
-const setAsyncInterval = (cb, interval) => {
-  if (cb && typeof cb === "function") {
-    const intervalIndex = asyncIntervals.length;
-    asyncIntervals.push(true);
-    runAsyncInterval(cb, interval, intervalIndex);
-    return intervalIndex;
-  } else {
-    throw new Error('Callback must be a function');
-  }
-};
-
-const clearAsyncInterval = (intervalIndex) => {
-  if (asyncIntervals[intervalIndex]) {
-    asyncIntervals[intervalIndex] = false;
-  }
-};
 class ACCOUNT {
     constructor(data, students) {
         this.data = data;
@@ -83,6 +52,7 @@ class ACCOUNT {
     async reloadStudents() {
         this.students = (await this.basicRequest('ListaUczniow', {}))
             .map((student) => {
+                console.log(student)
               new PROFILE(student, this);
             })
     }
@@ -93,7 +63,6 @@ class ACCOUNT {
         };
     }
 }
-
 class PROFILE {
     constructor(data, context) {
         this.data = data;
@@ -125,15 +94,6 @@ class PROFILE {
             DataKoncowa: DataKoncowa,
         });
     }
-    async updateStatus() {
-        return this.basicRequest('ZmienStatusWiadomosci', {
-          WiadomoscId: WiadomoscId,
-          FolderWiadomosci: "Odebrane",
-          Status: "Widoczna",
-          LoginId: LoginId,
-          IdUczen: IdUczen,
-        });
-    }
     async getGrades() {
         return this.basicRequest('Oceny', {
             IdOkresKlasyfikacyjny:IdOkresKlasyfikacyjny,
@@ -144,7 +104,7 @@ class PROFILE {
         return this.data;
     }
 }
-async function BOT() {
+async function getAccount() {
       const baseUrls = await got_1.get('https://komponenty.vulcan.net.pl/UonetPlusMobile/RoutingRules.txt');
       const [, baseUrl] = baseUrls.body.split('\n').map(line => line.replace('\r', '').split(','))
            .find(line => line[0] === credentials.token.substring(0, 3)) || [, 'http://api.fakelog.cf'];
@@ -171,28 +131,11 @@ async function BOT() {
       });
       const certRes = await got_1.post(`/${credentials.symbol}/mobile-api/Uczen.v3.UczenStart/Certyfikat`, { baseUrl, headers, body })
           .then((res) =>{
+            //console.log(res.body)
             JSON.parse(res.body).TokenCert
           });
-          const account = new ACCOUNT(certRes, []);
-          let x = await account.reloadStudents();
-          const student = new PROFILE()
-          setAsyncInterval(async () => {
-            var today = new Date();
-            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-            var dateTime = date+' '+time;
-            console.log(`Odświeżam Godzina: ${dateTime}`)
-            DataKoncowa = Math.round((new Date()).getTime() / 1000);
-            let y = await student.getMessages()
-            y.forEach(async(item)=>{
-              if(!item.DataPrzeczytania){
-                console.log(`Zmieniam status wiadomości od ${item.Nadawca}, Godzina: ${dateTime}`)
-                WiadomoscId = item.WiadomoscId
-                let z = await student.updateStatus()
-                console.log(z)
-              }
-            })
-          }, 1000*60*10);
+          console.log(certRes)
+      const account = new ACCOUNT(certRes, []);
+      let x = await account.reloadStudents();
 }
-
-BOT()
+getAccount()
