@@ -17,7 +17,10 @@ Bot do działania potrzebuje jedynie zainstalowanego Node.JS oraz NPM, wszystko 
 > **Pobranie Bota z GIT-a git clonem lub po prostu .zip i wypakowanie** https://github.com/A4kon/BOT_ZSE
 
 > **Instalacja zależności :** Komenda ``` npm i --s```
-
+Powinniście zobaczyć wylistowane pliki CPP
+![alt text](https://imgur.com/QlCril0)
+Jeśli tego nie macie
+```npm rebulid``` i poszukajcie w necie dlaczego macie ten błąd, zazwyczaj brak pythona w ścieżce systemowej, ale mogą być też inne powody ;)
 > **Opcjonalnie jeżeli chcecie żeby chodził w tle instalujecie pm2 (globalnie)**  ``` npm i pm2 --g```
 
 > **W edzienniku dodajecie urządzenie mobilne, następnie w pliku .env uzupełniacie odpowiednie pola (symbol,pin,token)**
