@@ -194,12 +194,12 @@ async function BOT() {
             y.forEach(async(item)=>{
               if(!item.DataPrzeczytania){
                 if(settingWszyscy == "nie" && settingNauczyciel != null) {
-                  if (item.Nadawca == settingNauczyciel) {
+                  if (settingNauczyciel.includes(item.Nadawca)) {
                     console.log(`Zmieniam status wiadomości od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}`)
                     WiadomoscId = item.WiadomoscId
                     let z = await student.updateStatus();
                     console.log(z)
-                  } else console.log(`Nieprzeczytana wiadomość od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}, pomijam (ustawienie: ${settingNauczyciel})`);
+                  } else console.log(`Nieprzeczytana wiadomość od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}, pomijam`);
                 } else {
                   console.log(`Zmieniam status wiadomości od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}`)
                   WiadomoscId = item.WiadomoscId
