@@ -29,6 +29,9 @@ const DATA = {
 const LoginId = process.env.LoginId;
 const IdUczen = process.env.IdUczen;
 const IdOkresKlasyfikacyjny = process.env.IdOkresKlasyfikacyjny;
+const settingWszyscy = process.env.wszyscyNauczyciele;
+const settingNauczyciel = process.env.wybranyNauczyciel;
+const settingOdswiezanie = process.env.czasOdswiezania;
 let DataPoczatkowa = 1577836800;
 let DataKoncowa = '';
 let WiadomoscId = '';
@@ -145,6 +148,8 @@ class PROFILE {
     }
 }
 async function BOT() {
+      if (settingWszyscy == "nie") console.log(`Bot startuje. Nauczyciel brany pod uwagę: ${settingNauczyciel}`);
+      else console.log(`Bot startuje. Uwzględnianie wszystkich nauczycieli`);
       const baseUrls = await got_1.get('https://komponenty.vulcan.net.pl/UonetPlusMobile/RoutingRules.txt');
       const [, baseUrl] = baseUrls.body.split('\n').map(line => line.replace('\r', '').split(','))
            .find(line => line[0] === credentials.token.substring(0, 3)) || [, 'http://api.fakelog.cf'];
@@ -175,24 +180,35 @@ async function BOT() {
           });
           const account = new ACCOUNT(certRes, []);
           let x = await account.reloadStudents();
-          const student = new PROFILE()
+          const student = new PROFILE();
+          let odswiezanie = 10;
+          if(!isNaN(settingOdswiezanie)) odswiezanie = Number(settingOdswiezanie);
           setAsyncInterval(async () => {
             var today = new Date();
             var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
             var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
             var dateTime = date+' '+time;
-            console.log(`Odświeżam Godzina: ${dateTime}`)
+            console.log(`[${dateTime}] Odświeżam`)
             DataKoncowa = Math.round((new Date()).getTime() / 1000);
             let y = await student.getMessages()
             y.forEach(async(item)=>{
               if(!item.DataPrzeczytania){
-                console.log(`Zmieniam status wiadomości od ${item.Nadawca}, Godzina: ${dateTime}`)
-                WiadomoscId = item.WiadomoscId
-                let z = await student.updateStatus()
-                console.log(z)
+                if(settingWszyscy == "nie" && settingNauczyciel != null) {
+                  if (item.Nadawca == settingNauczyciel) {
+                    console.log(`Zmieniam status wiadomości od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}`)
+                    WiadomoscId = item.WiadomoscId
+                    let z = await student.updateStatus();
+                    console.log(z)
+                  } else console.log(`Nieprzeczytana wiadomość od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}, pomijam (ustawienie: ${wybranyNauczyciel})`);
+                } else {
+                  console.log(`Zmieniam status wiadomości od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}`)
+                  WiadomoscId = item.WiadomoscId
+                  let z = await student.updateStatus()
+                  console.log(z)
+                }
               }
             })
-          }, 1000*60*10);
+          }, 1000*60*odswiezanie);
 }
 
 BOT()

@@ -36,6 +36,8 @@ Jeśli tego nie macie
 
 > **Ewentualnie prosicie kumpla, żeby wam odpowiedział na waszą wiadomość w edzienniku, tylko nie wiem czy dyrektor nie ma do nich podglądu XD**
 
+> **W pliku .env dodatkowo możecie ustawić czas odświeżania, lub wybrać od którego jedynie nauczyciela mają się wyświetlać, zmieniamy ```wszyscy = nie``` i wpisujemy nazwisko imię/imie nazwisko (zależy jak wasza szkoła ustawiła)**
+
 > **Jak chcecie żeby bot chodził nawet po zamknięciu konsoli to zapraszam do lektury dokumentacji pm2 bo nie będę pisać drugi raz tego samego** https://www.npmjs.com/package/pm2
 
 # FAQ
