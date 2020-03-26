@@ -199,7 +199,7 @@ async function BOT() {
                     WiadomoscId = item.WiadomoscId
                     let z = await student.updateStatus();
                     console.log(z)
-                  } else console.log(`Nieprzeczytana wiadomość od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}, pomijam (ustawienie: ${wybranyNauczyciel})`);
+                  } else console.log(`Nieprzeczytana wiadomość od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}, pomijam (ustawienie: ${settingNauczyciel})`);
                 } else {
                   console.log(`Zmieniam status wiadomości od ${item.Nadawca} o tytule "${item.Tytul}", wysłana ${item.DataWyslania} o ${item.GodzinaWyslania}`)
                   WiadomoscId = item.WiadomoscId
